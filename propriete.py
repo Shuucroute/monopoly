@@ -22,7 +22,7 @@ class Propriete:
 
 
     @property
-    def hypotheque(self):
+    def PrixHypotheque(self):
         return self.__prixAchat / 2
 
   
