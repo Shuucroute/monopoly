@@ -12,6 +12,7 @@ class Propriete:
     @property
     def nom(self):
         return self.__nom
+
     @property
     def hypotheque(self):
         return self.__hypotheque
@@ -24,9 +25,7 @@ class Propriete:
     def hypotheque(self):
         return self.__prixAchat / 2
 
-    @nom.setter
-    def nom(self, value):
-        self.__nom = value
+  
 
     def __str__(self):
         return (f"{self.__nom} : ({self.prixAchat} €)")
