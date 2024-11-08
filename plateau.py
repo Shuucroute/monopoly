@@ -1,4 +1,5 @@
 from propriete import Propriete
+
 class Terrain (Propriete):
     def __init__ (self, prixAchat, nom, loyers):
         super().__init__(prixAchat, nom)
@@ -19,7 +20,6 @@ class Terrain (Propriete):
 
 if __name__ == '__main__':
     rueDeLaPaix = Terrain(400, "Rue de la paix", [50,200,600,1400,1700,2000])
-    
     print(rueDeLaPaix)
     rueDeLaPaix.nbMaisons = 2
     print(f"Le loyer est de {rueDeLaPaix.calculerLoyer()}") 
