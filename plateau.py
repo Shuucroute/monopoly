@@ -1,8 +1,9 @@
 from propriete import Propriete
+from quartier import Quartier
 
 class Terrain (Propriete):
-    def __init__ (self, prixAchat, nom, loyers):
-        super().__init__(prixAchat, nom)
+    def __init__ (self, prixAchat, nom, loyers, quartier):
+        super().__init__(prixAchat, nom, quartier)
         self.__loyers = loyers
         self.__nbMaisons = 0
 
@@ -19,7 +20,14 @@ class Terrain (Propriete):
             self.__nbMaisons = valeur
 
 if __name__ == '__main__':
-    rueDeLaPaix = Terrain(400, "Rue de la paix", [50,200,600,1400,1700,2000])
+    quartierBleu = Quartier("Bleu", 200)
+    print(quartierBleu)
+
+    rueDeLaPaix = Terrain(400, "Rue de la paix", [50,200,600,1400,1700,2000], quartierBleu)
     print(rueDeLaPaix)
-    rueDeLaPaix.nbMaisons = 2
-    print(f"Le loyer est de {rueDeLaPaix.calculerLoyer()}") 
+
+    avenueChampsElysee = Terrain(320, "Avenue Champs Elysee", [35,175,500,1100,1300,1500], quartierBleu)
+    print(avenueChampsElysee)
+
+    print(quartierBleu)
+
