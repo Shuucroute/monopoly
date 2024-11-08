@@ -1,4 +1,5 @@
-class Propriete:
+from abc import ABC, abstractmethod
+class Propriete(ABC):
     def __init__(self, prixAchat, nom):
         self.__prixAchat = prixAchat
         self.__nom = nom
