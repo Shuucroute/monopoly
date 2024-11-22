@@ -11,9 +11,9 @@ class DB:
     def connexionBase(cls):
         mydb = mysql.connector.connect(
           host="localhost",
-          user="mmaldo",
-          password="aDHp8P6?2/6]",
-          database = "monopoly_prod"
+          user="root",
+          password="password",
+          database = "monopoly"
         )
         return mydb
 
