@@ -8,7 +8,7 @@ class Propriete:
         self.__nom = nom
         self.__hypotheque = False
         self.leQuartier = quartier
-        #quartier.ajouterPropriete(self)
+        quartier.ajouterPropriete(self)
         
     @property
     def prixAchat(self):

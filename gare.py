@@ -5,10 +5,9 @@ from propriete import Propriete
 class Gare(Propriete):
     loyers = [25,50,100,200]
     prixAchatGare = 200
-    quartierGare = Quartier("Noir")
     
-    def __init__(self,nom):
-        super().__init__(Gare.prixAchatGare, nom, Gare.quartierGare)
+    def __init__(self,nom, leQuartier):
+        super().__init__(Gare.prixAchatGare, nom, leQuartier)
         
     def calculerLoyer(self):
         # à calculer ... en passant par quartier
@@ -21,19 +20,17 @@ class Gare(Propriete):
         return self.loyers[self.nbGares]
 
 if __name__ == '__main__':
+    leQuartierGare = Quartier("Noir")
     # gare Montparnasse
-    gareMontparnasse = Gare("Gare Montparnasse")
-    print(gareMontparnasse)
+    gareMontparnasse = Gare("Gare Montparnasse", leQuartierGare)
 
     # gare Saint Lazare
-    gareSaintLazare = Gare("Gare Saint Lazare")
-    print(gareSaintLazare)
+    gareSaintLazare = Gare("Gare Saint Lazare", leQuartierGare)
 
     # gare de Lyon
-    gareDeLyon = Gare("Gare de Lyon")
-    print(gareDeLyon)
+    gareDeLyon = Gare("Gare de Lyon", leQuartierGare)
 
     # gare du Nord
-    gareDuNord = Gare("Gare du Nord")
-    print(gareDuNord)
+    gareDuNord = Gare("Gare du Nord", leQuartierGare)
     
+    print(gareDuNord.leQuartier)

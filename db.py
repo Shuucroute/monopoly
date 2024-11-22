@@ -1,9 +1,9 @@
 import mysql.connector
 from quartier import Quartier
 from propriete import Propriete
-import Terrain
-import gare
-import CompagniEE
+from Terrain import Terrain
+from gare import Gare
+from CompagnieEE import CompagnieEE
 
 
 class DB:
@@ -14,7 +14,7 @@ class DB:
         user="root",
         password="",
         database = "monopoly_ethan"
-)
+    )
         return mydb
 
 # TABLE QUARTIERS -------------------------------------------------------
@@ -110,7 +110,58 @@ class DB:
 # TABLE PROPRIETES -------------------------------------------------------
 # to do ...
 
+# creation de la table - Next
+
+# importerPropriete
+    @classmethod
+    def importerPropriete(cls, id=None, nom=None):
+        maConnexion = DB.connexionBase()
+        monCurseur = maConnexion.cursor(dictionary= True)
+
+        requete = f"""
+                SELECT id,
+                       type,
+                       idQuartier,
+                       nom,
+                       prixAchat,
+                       loyers
+                FROM   proprietes
+                WHERE  (id = '{id}' OR nom like '{nom}');"""
+
+        monCurseur.execute(requete)
+        monResultat = monCurseur.fetchone()
+
+        #récupérer le quartier correspondant
+        #q=DB.importerQuartier(id=int(monResultat["idQuartier"]))
+        #ou
+        q=DB.Quartiers[int(monResultat["idQuartier"])]   
+        if monResultat["type"] == "Terrain":           
+            # je cree un Terrain
+            p = Terrain(int(monResultat["prixAchat"]),
+                        monResultat["nom"],
+                        monResultat["loyers"],      # "2,10,30,90,160,250" => [2,10,30,90,160,250]
+                        q)  # 1 => 
+
+        elif monResultat["type"] == "Gare":
+            # je cree une Gare
+            p = Gare(monResultat["nom"],
+                     q)
+            
+        else:
+            # je cree une CompagnieEE - TODO
+            p = None
+
+        p.id = monResultat["id"]   
+        return p
+    
+# Proprietes (importer toutes les proprietes)
+
+# sauvegarder une propriete - Next
+
+# suppression de la table - Next
+
 if __name__ == '__main__':
+    '''
     leQuartierJaune = DB.importerQuartier(id=8)
     print(leQuartierJaune)
 
@@ -120,4 +171,17 @@ if __name__ == '__main__':
     print(f"il y a {len(DB.Quartiers)} quartiers:")
     for cle,valeur in DB.Quartiers.items():
         print(cle, "-", valeur)
+    '''
 
+    maPropriete1 = DB.importerPropriete(id=3)
+    print(maPropriete1)
+
+    maPropriete2 = DB.importerPropriete(nom="Gare MontParnasse")
+    print(maPropriete2)
+
+    q=maPropriete2.leQuartier
+    print(q)
+
+
+
+        
