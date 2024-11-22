@@ -1,13 +1,14 @@
-from Quartier import Quartier
+import Quartier
 from abc import ABC, abstractmethod
 
-class Propriete(ABC):
+class Propriete:
     def __init__(self, prixAchat, nom, quartier):
+        self.id = None
         self.__prixAchat = prixAchat
         self.__nom = nom
         self.__hypotheque = False
         self.leQuartier = quartier
-        quartier.ajouterPropriete(self)
+        #quartier.ajouterPropriete(self)
         
     @property
     def prixAchat(self):
@@ -16,6 +17,10 @@ class Propriete(ABC):
     @property
     def nom(self):
         return self.__nom
+
+    @nom.setter
+    def nom(self, valeur):
+        self.__nom = valeur
 
     @property
     def hypotheque(self):
@@ -35,12 +40,6 @@ class Propriete(ABC):
     def calculerLoyer(self):
         pass
 
-if __name__ == '__main__':
-    rueDeLaPaix = Propriete(400, "Rue de la paix")
-    print(rueDeLaPaix.prixAchat)
-    print(rueDeLaPaix.hypotheque)
-    rueDeLaPaix.hypotheque=True
-    print(rueDeLaPaix)
-
-    
-    
+    @abstractmethod
+    def type(self):
+        pass

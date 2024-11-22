@@ -1,6 +1,6 @@
-
 class Quartier:
     def __init__(self, couleur, prixMaison=0):
+        self.id = None
         self.__couleur = couleur
         self.__prixMaison = prixMaison
         self.lesProprietesDuQuartier = []
@@ -26,9 +26,3 @@ class Quartier:
 # combien y a -t-il de proprietes dans le quartier ?
 
 # combien un jour a-t-il de proprietes dans le quartier ?
-
-if __name__ == '__main__':
-    quartierBleu = Quartier("Bleu", 200)
-    print(quartierBleu)
-    quartierGares = Quartier("Noir")
-    print(quartierGares)
