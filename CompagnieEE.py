@@ -1,4 +1,4 @@
-from Propriete import Propriete
+from propriete import Propriete
 
 class CompagnieEE(Propriete) :
     

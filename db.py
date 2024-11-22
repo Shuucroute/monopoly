@@ -1,8 +1,8 @@
 import mysql.connector
-from Quartier import Quartier
-from Propriete import Propriete
-import Terrain
-import Gare
+from quartier import Quartier
+from propriete import Propriete
+from Terrain import Terrain
+from gare import Gare
 from CompagnieEE import CompagnieEE
 
 
@@ -12,8 +12,8 @@ class DB:
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="password.",
-            database = "monopoly"
+            password="",
+            database = "monopoly_ethan"
         )
         return mydb
 
@@ -110,11 +110,11 @@ class DB:
 # TABLE PROPRIETES -------------------------------------------------------
 # to do ...
 
-#Création de la table next
+# creation de la table - Next
 
-#importerPropriete
-@classmethod
-def importerPropriete(cls, id=None, nom=None):
+# importerPropriete
+    @classmethod
+    def importerPropriete(cls, id=None, nom=None):
         maConnexion = DB.connexionBase()
         monCurseur = maConnexion.cursor(dictionary= True)
 
@@ -124,40 +124,44 @@ def importerPropriete(cls, id=None, nom=None):
                        idQuartier,
                        nom,
                        prixAchat,
-                       loyer
+                       loyers
                 FROM   proprietes
                 WHERE  (id = '{id}' OR nom like '{nom}');"""
 
         monCurseur.execute(requete)
         monResultat = monCurseur.fetchone()
+
         #récupérer le quartier correspondant
-        q=DB.importerQuartier(id=int(monResultat["idQuartier"]))
-        if monResultat["type"] == "Terrain":
-            #je crée un terrain
+        #q=DB.importerQuartier(id=int(monResultat["idQuartier"]))
+        #ou
+        q=DB.Quartiers[int(monResultat["idQuartier"])]       
+        if monResultat["type"] == "Terrain":           
+            # je cree un Terrain
             p = Terrain(int(monResultat["prixAchat"]),
                         monResultat["nom"],
-                        monResultat["loyer"],
-                        q)
-        
+                        monResultat["loyers"],      # "2,10,30,90,160,250" => [2,10,30,90,160,250]
+                        q)  # 1 => 
+
         elif monResultat["type"] == "Gare":
-            #je crée une gare 
-            p = Gare()
-        else : 
-            p = CompagnieEE()
-            #je crée une compagnie
-        q = Quartier(monResultat["couleur"], int(monResultat["prixMaison"]))
-        q.id = int(monResultat["id"])
-        
-        return q
+            # je cree une Gare
+            p = Gare(monResultat["nom"],
+                     q)
+            
+        else:
+            # je cree une CompagnieEE - TODO
+            p = None
 
+        p.id = monResultat["id"]   
+        return p
+    
+# Proprietes (importer toutes les proprietes)
 
-#Proprietes (importer toutes les proprietes)
+# sauvegarder une propriete - Next
 
-#sauvegarder une proprietes
-
-#suppression de la table next
+# suppression de la table - Next
 
 if __name__ == '__main__':
+    '''
     leQuartierJaune = DB.importerQuartier(id=8)
     print(leQuartierJaune)
 
@@ -167,3 +171,24 @@ if __name__ == '__main__':
     print(f"il y a {len(DB.Quartiers)} quartiers:")
     for cle,valeur in DB.Quartiers.items():
         print(cle, "-", valeur)
+    '''
+    maPropriete0 = DB.importerPropriete(id=1)
+    print(maPropriete0)
+
+    maPropriete1 = DB.importerPropriete(id=3)
+    print(maPropriete1)
+
+    maPropriete2 = DB.importerPropriete(nom="Gare MontParnasse")
+    print(maPropriete2)
+
+    maPropriete3 = DB.importerPropriete(nom="Gare Saint-Lazare")
+    print(maPropriete3)
+
+    maPropriete4 = DB.importerPropriete(nom="Gare de Lyon")
+    print(maPropriete4)
+
+    maPropriete5 = DB.importerPropriete(nom="Gare du Nord")
+    print(maPropriete5)
+
+    q=maPropriete2.leQuartier
+    print(q)
