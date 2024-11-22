@@ -1,5 +1,5 @@
-from Quartier import Quartier
-from Propriete import Propriete
+from quartier import Quartier
+from propriete import Propriete
 from propriete import Propriete
 
 class Gare(Propriete):
@@ -37,13 +37,3 @@ if __name__ == '__main__':
     gareDuNord = Gare("Gare du Nord")
     print(gareDuNord)
     
-    print(Gare.quartierGare)
-    gareMontparnasse = Gare("Gare Montparnasse")
-    print(gareMontparnasse)
-    gareMontparnasse.nbGares += 1
-    print(f"Le loyer est de {gareMontparnasse.calculerLoyer()}") 
-    gareSaintLazare = Gare("Gare Saint-Lazare")
-    print(gareSaintLazare)
-    gareSaintLazare.nbGares += 1
-    print(f"Le loyer est de {gareSaintLazare.calculerLoyer()}") 
-
