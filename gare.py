@@ -1,31 +1,21 @@
-from Propriete import Propriete
+from propriete import Propriete
 
-class Gare(Propriete) :
-    loyers = [0,25,50,100,200]  # champ à portée classe : un seul pour tous les objets gares
+class Gare(Propriete):
+    loyers = [25,50,100,200]
     prixAchatGare = 200
-    
     def __init__(self,nom):
-        super().__init__(nom, Gare.prixAchatGare)
-        
-    def calculerLoyer(self):
-        # à calculer ... en passant par quartier
-        nbGares = 0
-        return Gare.loyers[nbGares]
+        super().__init__(nom,Gare.prixAchatGare)
 
-    @property
-    def nbGares(self):
-        return self.__nbGares
-
-    @nbGares.setter
-    def nbGares(self,value):
-        self.__nbGares = value
+    def calculerLoyer(self):    
+        return self.loyers[self.nbGares]
 
 if __name__ == '__main__':
-    garemontparnasse = Gare("Gare Montparnasse")
-    print(garemontparnasse)
-    garesaintlazare = Gare("Gare Saint Lazare")
-    print(garesaintlazare)
-
-    print(f"Le loyer de la gare Montparnasse est de {garemontparnasse.calculerLoyer()}")
-    print(f"Les loyers de la gare Montparnasse sont {Gare.loyers}")
+    gareMontparnasse = Gare("Gare Montparnasse")
+    print(gareMontparnasse)
+    gareMontparnasse.nbGares += 1
+    print(f"Le loyer est de {gareMontparnasse.calculerLoyer()}") 
+    gareSaintLazare = Gare("Gare Saint-Lazare")
+    print(gareSaintLazare)
+    gareSaintLazare.nbGares += 1
+    print(f"Le loyer est de {gareSaintLazare.calculerLoyer()}") 
 
