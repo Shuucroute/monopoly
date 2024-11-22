@@ -1,8 +1,9 @@
-from Quartier import Quartier
-from Propriete import Propriete
+from quartier import Quartier
+from propriete import Propriete
+from propriete import Propriete
 
-class Gare(Propriete) :
-    loyers = [0,25,50,100,200]  # champ à portée classe : un seul pour tous les objets gares
+class Gare(Propriete):
+    loyers = [25,50,100,200]
     prixAchatGare = 200
     quartierGare = Quartier("Noir")
     
@@ -13,6 +14,11 @@ class Gare(Propriete) :
         # à calculer ... en passant par quartier
         nbGares = 0
         return Gare.loyers[nbGares]
+
+        super().__init__(nom,Gare.prixAchatGare)
+
+    def calculerLoyer(self):    
+        return self.loyers[self.nbGares]
 
 if __name__ == '__main__':
     # gare Montparnasse
@@ -31,4 +37,3 @@ if __name__ == '__main__':
     gareDuNord = Gare("Gare du Nord")
     print(gareDuNord)
     
-    print(Gare.quartierGare)

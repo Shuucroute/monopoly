@@ -1,20 +1,20 @@
 import mysql.connector
-from Quartier import Quartier
-from Propriete import Propriete
+from quartier import Quartier
+from propriete import Propriete
 import Terrain
-import Gare
-import CompagnieEE
+import gare
+import CompagniEE
 
 
 class DB:
     @classmethod
     def connexionBase(cls):
         mydb = mysql.connector.connect(
-          host="localhost",
-          user="root",
-          password="password",
-          database = "monopoly"
-        )
+        host="localhost",
+        user="root",
+        password="",
+        database = "monopoly_ethan"
+)
         return mydb
 
 # TABLE QUARTIERS -------------------------------------------------------
