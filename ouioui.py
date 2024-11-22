@@ -11,7 +11,7 @@ print(mydb)
 
 monCurseur = mydb.cursor()
 monCurseur.execute("""
-CREATE TABLE quartiers
+CREATE TABLE IF NOT EXISTS quartiers 
 (
     id INT NOT NULL AUTO_INCREMENT,
     couleur VARCHAR(255),
@@ -20,4 +20,4 @@ CREATE TABLE quartiers
 );
 """)
 
-print("")
+print("table créée !")
