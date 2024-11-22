@@ -19,7 +19,7 @@ class Quartier:
         else:
             resultat = resultat + f" - {len(self.lesProprietesDuQuartier)} propriété(s):"
             for p in self.lesProprietesDuQuartier:
-                resultat = resultat + '\n' + str(p)
+                resultat = resultat + '\n->' + str(p)
             
         return resultat
 

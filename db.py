@@ -154,8 +154,52 @@ class DB:
         p.id = monResultat["id"]   
         return p
     
+
+
+
+    
 # Proprietes (importer toutes les proprietes)
 
+    __Proprietes = {} 
+    @classmethod
+    @property
+    def Proprietes(cls):
+        if DB.__Proprietes == {}:
+            maConnexion = DB.connexionBase()
+            monCurseur = maConnexion.cursor(dictionary= True)
+ 
+            monCurseur.execute(f"""
+                SELECT id,
+                       type,
+                       idQuartier,
+                       nom,
+                       prixAchat,
+                       loyers
+                FROM   proprietes;""")
+            mesResultats = monCurseur.fetchall()
+            DB.__Proprietes = {}
+            for r in mesResultats:
+                q=DB.Quartiers[int(r["idQuartier"])]       
+                if r["type"] == "Terrain":           
+                    # je cree un Terrain
+                    p = Terrain(int(r["prixAchat"]),
+                                r["nom"],
+                                r["loyers"],      # "2,10,30,90,160,250" => [2,10,30,90,160,250]
+                                q)  # 1 => 
+
+                elif r["type"] == "Gare":
+                    # je cree une Gare
+                    p = Gare(r["nom"],
+                            q)
+                    
+                else:
+                    # je cree une CompagnieEE - TODO
+                    p = None
+
+                p.id = r["id"]   
+                DB.__Proprietes[p.id] = p
+            
+        return DB.__Proprietes
 # sauvegarder une propriete - Next
 
 # suppression de la table - Next
@@ -172,23 +216,25 @@ if __name__ == '__main__':
     for cle,valeur in DB.Quartiers.items():
         print(cle, "-", valeur)
     '''
-    maPropriete0 = DB.importerPropriete(id=1)
-    print(maPropriete0)
+    # maPropriete0 = DB.importerPropriete(id=1)
+    # print(maPropriete0)
 
-    maPropriete1 = DB.importerPropriete(id=3)
-    print(maPropriete1)
+    # maPropriete1 = DB.importerPropriete(id=3)
+    # print(maPropriete1)
 
     maPropriete2 = DB.importerPropriete(nom="Gare MontParnasse")
     print(maPropriete2)
 
-    maPropriete3 = DB.importerPropriete(nom="Gare Saint-Lazare")
-    print(maPropriete3)
+    # maPropriete3 = DB.importerPropriete(nom="Gare Saint-Lazare")
+    # print(maPropriete3)
 
-    maPropriete4 = DB.importerPropriete(nom="Gare de Lyon")
-    print(maPropriete4)
+    # maPropriete4 = DB.importerPropriete(nom="Gare de Lyon")
+    # print(maPropriete4)
 
-    maPropriete5 = DB.importerPropriete(nom="Gare du Nord")
-    print(maPropriete5)
+    # maPropriete5 = DB.importerPropriete(nom="Gare du Nord")
+    # print(maPropriete5)
 
+    for cle,valeur in DB.Proprietes.items():
+        print(cle,valeur)
     q=maPropriete2.leQuartier
     print(q)
