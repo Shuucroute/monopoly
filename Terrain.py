@@ -1,5 +1,5 @@
-from propriete import Propriete
-from quartier import Quartier
+from Propriete import Propriete
+from Quartier import Quartier
 
 class Terrain(Propriete):
     def __init__(self, prixAchat, nom, loyers, quartier):

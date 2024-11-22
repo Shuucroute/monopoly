@@ -1,4 +1,4 @@
-import quartier
+import Quartier
 from abc import ABC, abstractmethod
 
 class Propriete:
