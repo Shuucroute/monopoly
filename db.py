@@ -158,7 +158,6 @@ def importerPropriete(cls, id=None, nom=None):
 #suppression de la table next
 
 if __name__ == '__main__':
-    '''
     leQuartierJaune = DB.importerQuartier(id=8)
     print(leQuartierJaune)
 
