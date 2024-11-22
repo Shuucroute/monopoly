@@ -1,6 +1,6 @@
-from quartier import Quartier
-from propriete import Propriete
-from propriete import Propriete
+from Quartier import Quartier
+from Propriete import Propriete
+from Propriete import Propriete
 
 class Gare(Propriete):
     loyers = [25,50,100,200]
