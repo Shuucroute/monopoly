@@ -1,28 +1,23 @@
 class Quartier:
     def __init__(self, couleur, prixMaison=0):
         self.id = None
-        self.__couleur = couleur
-        self.__prixMaison = prixMaison
-        self.lesProprietesDuQuartier = []
+        self.couleur = couleur
+        self.prixMaison = prixMaison
+        self.proprietes = []
 
-    def ajouterPropriete(self, laPropriete):
-        self.lesProprietesDuQuartier.append(laPropriete)
-        
+    def ajouterPropriete(self, propriete):
+        self.proprietes.append(propriete)
+
     def __str__(self):
-        if self.__prixMaison == 0:
-            resultat = f"Quartier {self.__couleur}"
+        description = f"Quartier {self.couleur}"
+        if self.prixMaison > 0:
+            description += f" - Prix d'une maison : {self.prixMaison}€"
+
+        if not self.proprietes:
+            description += " - Aucune propriété"
         else:
-            resultat = f"Quartier {self.__couleur} - Prix d'une maison : {self.__prixMaison}€"
+            description += f" - {len(self.proprietes)} propriété(s):"
+            for propriete in self.proprietes:
+                description += f'\n-> {propriete}'
 
-        if len(self.lesProprietesDuQuartier) == 0:
-            resultat = resultat + " - Aucune propriété"
-        else:
-            resultat = resultat + f" - {len(self.lesProprietesDuQuartier)} propriété(s):"
-            for p in self.lesProprietesDuQuartier:
-                resultat = resultat + '\n->' + str(p)
-            
-        return resultat
-
-# combien y a -t-il de proprietes dans le quartier ?
-
-# combien un jour a-t-il de proprietes dans le quartier ?
+        return description

@@ -1,240 +1,78 @@
 import mysql.connector
 from quartier import Quartier
-from propriete import Propriete
 from Terrain import Terrain
 from gare import Gare
 from CompagnieEE import CompagnieEE
 
 
 class DB:
-    @classmethod
-    def connexionBase(cls):
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database = "monopoly_ethan"
-        )
-        return mydb
+    @staticmethod
+    def connexionBase():
+        try:
+            return mysql.connector.connect(
+                host="localhost",
+                user="root",
+                password="password",
+                database="monopoly"
+            )
+        except mysql.connector.Error as err:
+            print(f"Erreur lors de la connexion à la base de données : {err}")
+            exit(1)
 
-# TABLE QUARTIERS -------------------------------------------------------
-    @classmethod
-    def creationQuartiers(cls):
-        maConnexion = DB.connexionBase()
-        monCurseur = maConnexion.cursor()
-        monCurseur.execute("""
-        CREATE TABLE IF NOT EXISTS quartiers 
-        (
-            id INT NOT NULL AUTO_INCREMENT,
-            couleur VARCHAR(255),
-            prixMaison INT,
-            CONSTRAINT PK_quartiers PRIMARY KEY(id)
-        );
-        """)
+    @staticmethod
+    def creationQuartiers():
+        with DB.connexionBase() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS quartiers (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                couleur VARCHAR(255) NOT NULL,
+                prixMaison INT NOT NULL
+            );
+            """)
 
-    @classmethod
-    def importerQuartier(cls, id=None, nom=None):
-        maConnexion = DB.connexionBase()
-        monCurseur = maConnexion.cursor(dictionary= True)
+    @staticmethod
+    def importerQuartier(id=None, nom=None):
+        if id is None and nom is None:
+            print("Erreur : Veuillez fournir un `id` ou un `nom` pour importer un quartier.")
+            return None
+        with DB.connexionBase() as conn:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT id, couleur, prixMaison
+                FROM quartiers
+                WHERE id = %s OR couleur = %s
+            """, (id, nom))
+            result = cursor.fetchone()
+            if result:
+                quartier = Quartier(result['couleur'], result['prixMaison'])
+                quartier.id = result['id']
+                return quartier
+            return None
 
-        requete = f"""
-                SELECT id,
-                       couleur,
-                       prixMaison
-                FROM   quartiers
-                WHERE  (id = '{id}' OR couleur like '{nom}');"""
-
-        monCurseur.execute(requete)
-        monResultat = monCurseur.fetchone()
-
-        q = Quartier(monResultat["couleur"], int(monResultat["prixMaison"]))
-        q.id = int(monResultat["id"])
-        
-        return q
-
-    __Quartiers = {}
-    
-    @classmethod
-    @property
-    def Quartiers(cls):
-        if DB.__Quartiers == {}:
-            maConnexion = DB.connexionBase()
-            monCurseur = maConnexion.cursor(dictionary= True)
- 
-            monCurseur.execute(f"""
-                SELECT id,
-                       couleur,
-                       prixMaison
-                FROM   quartiers;""")
-            mesResultats = monCurseur.fetchall()
-            DB.__Quartiers = {}
-            for r in mesResultats:
-                q = Quartier(r["couleur"], int(r["prixMaison"]))
-                q.id = int(r["id"])
-                DB.__Quartiers[q.id] = q
-            
-        return DB.__Quartiers
-
-    @classmethod
-    def sauvegarderQuartier(cls, q):
-        # si id n'a pas de valeur => insert
-        # si id a une valeur => update
-        maConnexion = DB.connexionBase()
-        monCurseur = maConnexion.cursor()
-
-        if q.id is None:
-            print("inserting...")
-            monCurseur.execute("""
-               INSERT INTO quartiers (couleur, prixMaison)
-               VALUES (%s, %s);""", (q.couleur, q.prixMaison))
-
-            # recuperer l'id généré dans la base
-            q.id = monCurseur.lastrowid
-        else:
-            print("updating...")
-            monCurseur.execute("""
-               UPDATE quartiers
-               SET couleur = %s,
-                   prixMaison = %s
-               WHERE id = %s;""", (q.couleur, q.prixMaison, q.id))
- 
-        maConnexion.commit()
-        
-    @classmethod
-    def suppressionTable(cls):
-        maConnexion = DB.connexionBase()
-        monCurseur = maConnexion.cursor()
-        monCurseur.execute("DROP TABLE quartiers;")
-
-
-# TABLE PROPRIETES -------------------------------------------------------
-# to do ...
-
-# creation de la table - Next
-
-# importerPropriete
-    @classmethod
-    def importerPropriete(cls, id=None, nom=None):
-        maConnexion = DB.connexionBase()
-        monCurseur = maConnexion.cursor(dictionary= True)
-
-        requete = f"""
-                SELECT id,
-                       type,
-                       idQuartier,
-                       nom,
-                       prixAchat,
-                       loyers
-                FROM   proprietes
-                WHERE  (id = '{id}' OR nom like '{nom}');"""
-
-        monCurseur.execute(requete)
-        monResultat = monCurseur.fetchone()
-
-        #récupérer le quartier correspondant
-        #q=DB.importerQuartier(id=int(monResultat["idQuartier"]))
-        #ou
-        q=DB.Quartiers[int(monResultat["idQuartier"])]       
-        if monResultat["type"] == "Terrain":           
-            # je cree un Terrain
-            p = Terrain(int(monResultat["prixAchat"]),
-                        monResultat["nom"],
-                        monResultat["loyers"],      # "2,10,30,90,160,250" => [2,10,30,90,160,250]
-                        q)  # 1 => 
-
-        elif monResultat["type"] == "Gare":
-            # je cree une Gare
-            p = Gare(monResultat["nom"],
-                     q)
-            
-        else:
-            # je cree une CompagnieEE - TODO
-            p = None
-
-        p.id = monResultat["id"]   
-        return p
-    
-
-
-
-    
-# Proprietes (importer toutes les proprietes)
-
-    __Proprietes = {} 
-    @classmethod
-    @property
-    def Proprietes(cls):
-        if DB.__Proprietes == {}:
-            maConnexion = DB.connexionBase()
-            monCurseur = maConnexion.cursor(dictionary= True)
- 
-            monCurseur.execute(f"""
-                SELECT id,
-                       type,
-                       idQuartier,
-                       nom,
-                       prixAchat,
-                       loyers
-                FROM   proprietes;""")
-            mesResultats = monCurseur.fetchall()
-            DB.__Proprietes = {}
-            for r in mesResultats:
-                q=DB.Quartiers[int(r["idQuartier"])]       
-                if r["type"] == "Terrain":           
-                    # je cree un Terrain
-                    p = Terrain(int(r["prixAchat"]),
-                                r["nom"],
-                                r["loyers"],      # "2,10,30,90,160,250" => [2,10,30,90,160,250]
-                                q)  # 1 => 
-
-                elif r["type"] == "Gare":
-                    # je cree une Gare
-                    p = Gare(r["nom"],
-                            q)
-                    
-                else:
-                    # je cree une CompagnieEE - TODO
-                    p = None
-
-                p.id = r["id"]   
-                DB.__Proprietes[p.id] = p
-            
-        return DB.__Proprietes
-# sauvegarder une propriete - Next
-
-# suppression de la table - Next
-
-if __name__ == '__main__':
-    '''
-    leQuartierJaune = DB.importerQuartier(id=8)
-    print(leQuartierJaune)
-
-    leQuartierMarron = DB.importerQuartier(nom='Marron')
-    print(leQuartierMarron)
-
-    print(f"il y a {len(DB.Quartiers)} quartiers:")
-    for cle,valeur in DB.Quartiers.items():
-        print(cle, "-", valeur)
-    '''
-    # maPropriete0 = DB.importerPropriete(id=1)
-    # print(maPropriete0)
-
-    # maPropriete1 = DB.importerPropriete(id=3)
-    # print(maPropriete1)
-
-    maPropriete2 = DB.importerPropriete(nom="Gare MontParnasse")
-    print(maPropriete2)
-
-    # maPropriete3 = DB.importerPropriete(nom="Gare Saint-Lazare")
-    # print(maPropriete3)
-
-    # maPropriete4 = DB.importerPropriete(nom="Gare de Lyon")
-    # print(maPropriete4)
-
-    # maPropriete5 = DB.importerPropriete(nom="Gare du Nord")
-    # print(maPropriete5)
-
-    for cle,valeur in DB.Proprietes.items():
-        print(cle,valeur)
-    q=maPropriete2.leQuartier
-    print(q)
+    @staticmethod
+    def importerPropriete(id=None, nom=None):
+        if id is None and nom is None:
+            print("Erreur : Veuillez fournir un `id` ou un `nom` pour importer une propriété.")
+            return None
+        with DB.connexionBase() as conn:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT id, type, idQuartier, nom, prixAchat, loyers
+                FROM proprietes
+                WHERE id = %s OR nom = %s
+            """, (id, nom))
+            result = cursor.fetchone()
+            if result:
+                quartier = DB.importerQuartier(result['idQuartier'])
+                if not quartier:
+                    print(f"Erreur : Quartier ID {result['idQuartier']} introuvable.")
+                    return None
+                if result['type'] == "Terrain":
+                    loyers = list(map(int, result['loyers'].split(',')))
+                    return Terrain(result['prixAchat'], result['nom'], loyers, quartier)
+                elif result['type'] == "Gare":
+                    return Gare(result['nom'], quartier)
+                elif result['type'] == "CompagnieEE":
+                    return CompagnieEE(result['prixAchat'], result['nom'], quartier)
+            return None
