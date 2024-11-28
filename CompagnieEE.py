@@ -5,7 +5,7 @@ class CompagnieEE(Propriete):
         super().__init__(prixAchat, nom, quartier)
 
     def calculerLoyer(self, facteur):
-        return 4 * facteur  # Exemple de calcul basé sur un facteur
+        return 4 * facteur 
 
     @property
     def type(self):
