@@ -8,7 +8,7 @@ def afficher_quartiers():
     """Exemple pour afficher tous les quartiers disponibles."""
     print("Chargement des quartiers...")
     quartiers = []
-    for id in range(1, 6): 
+    for id in range(1,11): 
         quartier = DB.importerQuartier(id=id)
         if quartier:
             quartiers.append(quartier)
@@ -19,7 +19,7 @@ def afficher_proprietes():
     """Exemple pour afficher toutes les propriétés."""
     print("\nChargement des propriétés...")
     proprietes = []
-    for id in range(1, 10):  
+    for id in range(1,39):  
         propriete = DB.importerPropriete(id=id)
         if propriete:
             proprietes.append(propriete)

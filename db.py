@@ -12,8 +12,8 @@ class DB:
             return mysql.connector.connect(
                 host="localhost",
                 user="root",
-                password="password",
-                database="monopoly"
+                password="",
+                database="monopoly_ethan"
             )
         except mysql.connector.Error as err:
             print(f"Erreur lors de la connexion à la base de données : {err}")

@@ -7,6 +7,7 @@ class Propriete(ABC):
         self.prixAchat = prixAchat
         self.hypotheque = False
         self.quartier = quartier
+        self.proprietaire = None
         quartier.ajouterPropriete(self)
 
     @property

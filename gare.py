@@ -13,3 +13,6 @@ class Gare(Propriete):
     @property
     def type(self):
         return "Gare"
+
+
+
